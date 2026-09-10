@@ -8,7 +8,7 @@ public class UserTests
         Assert.NotEqual(Shape.None, user.Shape);
     }
     [Fact]
-    
+
         public void NewUser_StartsWithZeroUploads()
     {
         var user = new User();
