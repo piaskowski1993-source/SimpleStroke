@@ -14,4 +14,12 @@ public class UserTests
         var user = new User();
         Assert.Equal(0, user.UploadCount);
     }
+    [Fact]
+    
+    public void Upload_IncreaseesUpploadCount()
+    {
+        var user = new User();
+        user.Upload();
+        Assert.Equal(1, user.UploadCount);
+    }
     }
