@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="SS.Core.Tests/SS.Core.Tests.csproj" />
+  <Project Path="SS.Core/SS.Core.csproj" />
+</Solution>
