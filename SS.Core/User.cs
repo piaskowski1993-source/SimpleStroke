@@ -6,4 +6,9 @@ public class User
     {
         Shape = ShapeAssigner.AssignRandomShape();
     }
+
+    public void Upload()
+    {
+        UploadCount++;
+    }
 }
