@@ -13,17 +13,17 @@ public class UsersCOntroller : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create()
+    public async Task<IActionResult> Create()
     {
-        var user = _userStore.Create();
+        var user = await _userStore.Create();
         return Ok(new { user.Id, user.Shape, user.UploadCount });
     }
         
     [HttpGet("{id}")]
     
-    public IActionResult Get(Guid id)
+    public async Task<IActionResult> Get(Guid id)
     {
-        var user = _userStore.Get(id);
+        var user = await _userStore.Get(id);
         return user is null
         ? NotFound()
         : Ok(new { user.Id, user.Shape, user.UploadCount });

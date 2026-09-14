@@ -1,5 +1,15 @@
+using SS.Api;
+using SS.Api.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSingleton<UserStore>();
+var connectionString = 
+builder.Configuration.GetConnectionString("DefaultConnection") ??   Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+
+builder.Services.AddDbContext<SSDbContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddHealthChecks();
+builder.Services.AddScoped<UserStore>();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -7,6 +17,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+app.MapHealthChecks("/health");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
