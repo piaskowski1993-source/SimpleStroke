@@ -18,6 +18,12 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+using(var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<SSDbContext>();
+    db.Database.Migrate();
+}
+
 app.MapHealthChecks("/health");
 
 // Configure the HTTP request pipeline.
