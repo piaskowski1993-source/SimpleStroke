@@ -1,8 +1,9 @@
 # Simple Stroke — Design
 
 Design-phase notes for a daily shape-drawing habit website (working name "Simple Stroke" /
-"Master Stroke" — not locked). No implementation has started — design/brainstorm only. Always
-check lock status before assuming a decision is final.
+"Master Stroke" — not locked). These are the original brainstorm/concept notes; implementation has
+since started as a course project — see `/CLAUDE.md` at the project root for current build status.
+Always check lock status before assuming a design decision below is still final.
 
 | File | Contents |
 |------|----------|
