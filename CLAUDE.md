@@ -73,15 +73,41 @@ is taken by an unrelated WroomWroom container, `wroomwroom-db-1`, left running f
 don't touch it). Stop `ss-postgres` before running `docker compose up` for the API, since compose's
 own `db` service also wants host port 5433.
 
-## Next up: Uke 3 (JWT/IAM)
+## Current status (Uke 3 — IAM/JWT, "Who shall pass?", in progress)
 
-Not yet scoped — per the standing lesson above, don't assume shape from the module overview page
-(which said Terraform/Cloud-init/Hetzner-ish topics) or from the CLAUDE.md draft mention of
-`AuthController`/Excalidraw/user-data-isolation below; that's a guess carried over from before this
-project even had its real assignment text. Get the actual pasted Ukesoppgave 3 text from Canvas
-first.
+Real Ukesoppgave 3 text obtained from Canvas 2026-09-16 (title: "Who shall pass?"). Actual scope,
+narrower than the earlier guess:
 
-Uke 4 (declarative infra) assignment wasn't posted on Canvas as of last check.
+- **Not** a full login/issuing system — goal is understanding how an API *reads* an
+  already-issued token and uses its claims to restrict data access. Test tokens come from jwt.io,
+  not a real Identity Provider.
+- **Del 1A** — Excalidraw flow diagram: Resource Owner / Client / Identity Provider / Resource
+  Server, showing how a token gets to the API.
+- **Del 1B** — same Excalidraw file, data-ownership modeling: define 3 rules for how data belongs
+  to a user (at least 1 self-formulated, not copied from the assignment's own examples).
+- **Del 2** — `AuthController`: reads JWT from the `Authorization` header, decodes with
+  `JwtSecurityTokenHandler` (package: `System.IdentityModel.Tokens.Jwt`), returns the claims.
+  Verify by pasting a jwt.io token and checking claims come back correctly.
+- **Del 3** — Swagger: add `OpenApiSecurityScheme` in `Program.cs` so the Authorize button accepts
+  a JWT and sends it with requests.
+- **Del 4** — wire the Del 1B design into the real domain: use the JWT's `sub` claim to identify
+  the calling user and restrict `SS.Api` endpoints so User A can't reach User B's data. Reference
+  tutorial (`Joviank/ToDo-prosjekt`, `Tutorial/Uke 4 (IAM)/JwtOppsett.txt`) does this by adding a
+  `UserId` field to the owned entity and filtering queries by the `sub` claim — SimpleStroke's
+  analogous shape still needs deciding (`User` currently *is* the top-level entity, no separate
+  child entity being owned yet).
+- **Del 5** — submit: Excalidraw file goes in a root-level `Excalidraw/` folder (`.png` or
+  `.excalidraw`, descriptive filename), commit, grab the commit URL.
+
+Rubric also explicitly checks: domain logic stays in service/domain layer (not scattered auth
+logic), scope stays tight (no new features beyond auth + ownership).
+
+Not started yet — next step is talking through the Del 1A/1B design before writing any code, per
+the assignment's own instruction to diagram intended understanding before implementing.
+
+## Then: Uke 4
+
+Declarative infra — assignment wasn't posted on Canvas as of last check.
 
 ## Checking in on start
 
