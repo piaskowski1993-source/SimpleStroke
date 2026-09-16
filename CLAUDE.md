@@ -56,27 +56,32 @@ Full pivot history, budget/hosting constraints, and course-scope decisions live 
     with env var fallback (`ConnectionStrings__DefaultConnection`, for Docker later).
   - First EF Core migration (`InitialCreate`) generated and committed.
 
-## Current status (Uke 2 — Docker week, in progress)
+## Current status (Uke 2 — Docker week, DONE)
 
-Done: full API + EF Core + Postgres wiring described above, migration generated, local Postgres
-running in Docker (`ss-postgres` container, mapped to host port **5433** — port 5432 is already
-taken on this machine by an unrelated WroomWroom Postgres container, `wroomwroom-db-1`, left
-running from that project; don't touch it, it's not part of SimpleStroke).
+Full API + EF Core + Postgres wiring, `Shape` persistence bug fixed (was silently dropped — EF's
+convention-based discovery skips get-only properties unless explicitly referenced in
+`OnModelCreating`; fixed with an explicit `Property(u => u.Shape)` call, same trick as `HasKey` for
+`Id`), standalone `Dockerfile` built and verified, `docker-compose.yaml` (API + Postgres + pgAdmin
++ healthcheck) up and verified — pgAdmin shows the data, and data survives an **API** container
+restart (the actual rubric requirement, not the DB container restarting).
 
-Not yet done, in order:
-1. Run the API locally (`dotnet run --project SS.Api`) against the `ss-postgres` container and
-   confirm migration + create/get actually persist data (in progress as of this note).
-2. Write the API's own `Dockerfile`, test it standalone first (per the assignment's own
-   recommended order — build/run the API container alone before wiring up compose).
-3. Write `docker-compose.yaml` — API + Postgres + pgAdmin + healthcheck. Reference pattern already
-   pulled from the course's linked example repo (`Joviank/ToDo-prosjekt`) — ask Claude for it
-   rather than re-researching from scratch.
-4. Verify pgAdmin can see the data, and that data survives an API container restart (the actual
-   rubric requirement — not the DB container restarting, the API one).
-5. Grab the commit URL for submission.
+Repo pushed to GitHub, public: https://github.com/piaskowski1993-source/SimpleStroke — submission
+commit: https://github.com/piaskowski1993-source/SimpleStroke/commit/ec4d49a03311fa0936c144362ba6218dbb823f04
 
-Then Uke 3 (JWT/IAM — `AuthController`, Excalidraw auth-flow diagram, user data isolation) and
-Uke 4 (declarative infra — assignment wasn't posted on Canvas as of last check).
+Local dev Postgres still runs as the standalone `ss-postgres` container (host port **5433** — 5432
+is taken by an unrelated WroomWroom container, `wroomwroom-db-1`, left running from that project;
+don't touch it). Stop `ss-postgres` before running `docker compose up` for the API, since compose's
+own `db` service also wants host port 5433.
+
+## Next up: Uke 3 (JWT/IAM)
+
+Not yet scoped — per the standing lesson above, don't assume shape from the module overview page
+(which said Terraform/Cloud-init/Hetzner-ish topics) or from the CLAUDE.md draft mention of
+`AuthController`/Excalidraw/user-data-isolation below; that's a guess carried over from before this
+project even had its real assignment text. Get the actual pasted Ukesoppgave 3 text from Canvas
+first.
+
+Uke 4 (declarative infra) assignment wasn't posted on Canvas as of last check.
 
 ## Checking in on start
 
