@@ -81,29 +81,33 @@ narrower than the earlier guess:
 - **Not** a full login/issuing system — goal is understanding how an API *reads* an
   already-issued token and uses its claims to restrict data access. Test tokens come from jwt.io,
   not a real Identity Provider.
-- **Del 1A** — Excalidraw flow diagram: Resource Owner / Client / Identity Provider / Resource
-  Server, showing how a token gets to the API.
-- **Del 1B** — same Excalidraw file, data-ownership modeling: define 3 rules for how data belongs
-  to a user (at least 1 self-formulated, not copied from the assignment's own examples).
-- **Del 2** — `AuthController`: reads JWT from the `Authorization` header, decodes with
-  `JwtSecurityTokenHandler` (package: `System.IdentityModel.Tokens.Jwt`), returns the claims.
+- **Del 1A** — DONE. Excalidraw flow diagram: Resource Owner / Client / Identity Provider /
+  Resource Server, showing how a token gets to the API.
+  (`Excalidraw/Autentiseringsflyt-og-Eierskap.png`, commit `c40e625`).
+- **Del 1B** — DONE, same file. Data-ownership modeling, 3 rules: (1) Identity Link — a `User`
+  row belongs to whoever's token `sub` matches its `AuthSubject` field; (2) Isolation of Data — a
+  request can only read/change Shape/UploadCount on the row where `sub == AuthSubject`; (3)
+  Applied Ownership Isolation (self-formulated) — isolation only applies to a user's own data,
+  shared things (e.g. a Global Feed) skip the AuthSubject check.
+- **Del 2** — not started. `AuthController`: reads JWT from the `Authorization` header, decodes
+  with `JwtSecurityTokenHandler` (package: `System.IdentityModel.Tokens.Jwt`), returns the claims.
   Verify by pasting a jwt.io token and checking claims come back correctly.
-- **Del 3** — Swagger: add `OpenApiSecurityScheme` in `Program.cs` so the Authorize button accepts
-  a JWT and sends it with requests.
-- **Del 4** — wire the Del 1B design into the real domain: use the JWT's `sub` claim to identify
-  the calling user and restrict `SS.Api` endpoints so User A can't reach User B's data. Reference
-  tutorial (`Joviank/ToDo-prosjekt`, `Tutorial/Uke 4 (IAM)/JwtOppsett.txt`) does this by adding a
-  `UserId` field to the owned entity and filtering queries by the `sub` claim — SimpleStroke's
-  analogous shape still needs deciding (`User` currently *is* the top-level entity, no separate
-  child entity being owned yet).
-- **Del 5** — submit: Excalidraw file goes in a root-level `Excalidraw/` folder (`.png` or
-  `.excalidraw`, descriptive filename), commit, grab the commit URL.
+- **Del 3** — not started. Swagger: add `OpenApiSecurityScheme` in `Program.cs` so the Authorize
+  button accepts a JWT and sends it with requests.
+- **Del 4** — not started. Wire the Del 1B design into the real domain: use the JWT's `sub` claim
+  to identify the calling user and restrict `SS.Api` endpoints so User A can't reach User B's
+  data. Reference tutorial (`Joviank/ToDo-prosjekt`, `Tutorial/Uke 4 (IAM)/JwtOppsett.txt`) does
+  this by adding a `UserId` field to the owned entity and filtering queries by the `sub` claim.
+  SimpleStroke's shape is now decided per Del 1B: add an `AuthSubject` string field directly on
+  `User` (no separate child entity needed — `User` already is the top-level owned entity) and
+  filter by it wherever `sub` identifies the caller. Needs a new EF Core migration.
+- **Del 5** — not started. Submit: Excalidraw file goes in a root-level `Excalidraw/` folder
+  (`.png` or `.excalidraw`, descriptive filename — already done), commit, grab the commit URL.
 
 Rubric also explicitly checks: domain logic stays in service/domain layer (not scattered auth
 logic), scope stays tight (no new features beyond auth + ownership).
 
-Not started yet — next step is talking through the Del 1A/1B design before writing any code, per
-the assignment's own instruction to diagram intended understanding before implementing.
+Next step: Del 2, the `AuthController`.
 
 ## Then: Uke 4
 
