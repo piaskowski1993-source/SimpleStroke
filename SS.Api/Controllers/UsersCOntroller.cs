@@ -1,4 +1,6 @@
+using SS.Api.Auth;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace SS.Api.Controllers;
 
@@ -15,18 +17,30 @@ public class UsersCOntroller : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create()
     {
-        var user = await _userStore.Create();
-        return Ok(new { user.Id, user.Shape, user.UploadCount });
+        var subject = JwtSubjectReader.GetSubject(Request);
+        if (subject is null)
+        {
+            return Unauthorized("Missing or invalid bearer token.");
+        }
+        {
+            var user = await _userStore.Create(subject);
+            return Ok(new { user.Id, user.Shape, user.UploadCount });
+        }
     }
         
     [HttpGet("{id}")]
     
     public async Task<IActionResult> Get(Guid id)
     {
-        var user = await _userStore.Get(id);
+        var subject = JwtSubjectReader.GetSubject(Request);
+        if (subject is null)
+        {
+            return Unauthorized("Missing or invalid bearer token.");
+        }
+        
+        var user = await _userStore.Get(id, subject);
         return user is null
-        ? NotFound()
-        : Ok(new { user.Id, user.Shape, user.UploadCount });
-
+            ? NotFound()
+            : Ok(new { user.Id, user.Shape, user.UploadCount });
     }
 }

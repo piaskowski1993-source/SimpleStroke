@@ -12,17 +12,18 @@ public class UserStore
         _db = db;
     }
     
-    public async Task<User> Create()
+    public async Task<User> Create(string authSubject)
     {
         var user = new User();
+        user.AssignOwner(authSubject);
         _db.Users.Add(user);
         await _db.SaveChangesAsync();
         return user;
     }
 
-    public async Task<User?> Get(Guid id)
+    public async Task<User?> Get(Guid id, string authSubject)
     {
-        return await _db.Users.FindAsync(id);
+        return await _db.Users.FirstOrDefaultAsync(u => u.Id == id && u.AuthSubject == authSubject);
     }
 
 }
